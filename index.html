@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>星澜阁 · 入口</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(ellipse at 50% -10%,#fdf9f1 0%,#f7f2e6 52%,#ece3d2 100%);color:#2f2a23;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px}
+.logo{font-size:20px;letter-spacing:10px;color:#5f4b32;font-weight:600}
+.sub{font-size:12px;letter-spacing:4px;color:#b9a98c;margin-top:8px}
+.loading{margin-top:30px;font-size:13px;color:#9c2b22;letter-spacing:2px}
+.bar{width:160px;height:3px;background:#ece0c8;border-radius:3px;margin-top:14px;overflow:hidden}
+.bar i{display:block;height:100%;width:40%;background:#9c2b22;animation:slide 1.1s infinite}
+@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}
+.err{margin-top:24px;font-size:13px;color:#b9a98c;line-height:1.9;text-align:center;display:none;max-width:320px}
+.err b{display:block;color:#9c2b22;margin-bottom:6px}
+</style>
+</head>
+<body>
+  <div class="logo">星 澜 阁</div>
+  <div class="sub">CLOUD·DRIVE·DOJO</div>
+  <div class="loading">正在跳转…</div>
+  <div class="bar"><i></i></div>
+  <div class="err" id="err"><b>入口暂时连不上</b>云端服务可能正在重建，稍等一分钟刷新即可。若持续无法访问，请联系晏澜。</div>
+<script>
+(function(){
+  function showErr(){ document.getElementById("err").style.display="block"; }
+  function go(d){
+    var dest = "/dashboard";
+    if(d && d.domain){ dest = d.domain.replace(/\/$/,"") + "/dashboard"; }
+    try { window.location.replace(dest); } catch(e) { showErr(); }
+    setTimeout(showErr, 5000);
+  }
+  fetch("latest.json?v="+Date.now(), {cache:"no-store"})
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(go)
+    .catch(function(){ showErr(); });
+})();
+</script>
+</body>
+</html>
