@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>新月剑道馆 · 跳转中</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(ellipse at 50% -10%,#fdf9f1 0%,#f7f2e6 52%,#ece3d2 100%);color:#2f2a23;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px}
+.logo{font-size:18px;letter-spacing:8px;color:#5f4b32;font-weight:600}
+.loading{margin-top:24px;font-size:13px;color:#9c2b22;letter-spacing:2px}
+.bar{width:120px;height:3px;background:#ece0c8;border-radius:3px;margin-top:14px;overflow:hidden}
+.bar i{display:block;height:100%;width:40%;background:#9c2b22;animation:slide 1.1s infinite}
+@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}
+.err{margin-top:20px;font-size:13px;color:#b9a98c;text-align:center;line-height:1.9;max-width:320px;display:none}
+.err b{display:block;color:#9c2b22;margin-bottom:6px}
+</style>
+</head>
+<body>
+  <div class="logo">新 月 剑 道 馆</div>
+  <div class="loading">正在为你打开档案…</div>
+  <div class="bar"><i></i></div>
+  <div class="err" id="err"><b>入口暂时连不上</b>稍等刷新重试。</div>
+<script>
+(function(){
+  function g(e){ return document.getElementById(e).style.display="block"; }
+  // 取原路径（去掉 /kendo-link 仓库前缀），保留 query
+  var path = location.pathname.replace(/^\/kendo-link/, "") || "/";
+  var q = location.search || "";
+  // 注意：fetch 必须用绝对路径（404页可能在任何深层路径）
+  fetch("/kendo-link/latest.json?v="+Date.now(), {cache:"no-store"})
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(d){
+      if(!d || !d.domain) return g("err");
+      window.location.replace(d.domain.replace(/\/$/,"") + path + q);
+    })
+    .catch(function(){ g("err"); });
+})();
+</script>
+</body>
+</html>
